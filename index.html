@@ -305,6 +305,7 @@
     <div class="controls">
         <button class="btn btn-primary" onclick="showAllQuestions()">عرض جميع الأسئلة</button>
         <button class="btn btn-secondary" onclick="resetAll()">إعادة تعيين</button>
+        <button class="btn btn-secondary" id="langToggle" onclick="toggleLanguage()">English</button>
     </div>
 
     <div class="search-box">
@@ -799,7 +800,7 @@
         {
             id: 64,
             category: "مواد الإعلان",
-            question: "أي مادة تحظر أي تمييز على أساس العرق أو اللون أو الجنس أو اللغة أو الدين؟",
+            question: "أي مادة تحظر أي تمييز على أساس العرق أو اللون أو الجنس أو اللغة؟",
             options: ["المادة 1", "المادة 2", "المادة 3", "المادة 4"],
             correct: 1
         },
@@ -1050,16 +1051,726 @@
         }
     ];
 
+    // English version of the questions (same ids and correct indices, text in English)
+    const questionsEn = [
+        {
+            id: 1,
+            category: "Historical Origins",
+            question: "The first documented calls for human rights began in:",
+            options: ["11th century", "13th century", "15th century", "18th century"],
+            correct: 1
+        },
+        {
+            id: 2,
+            category: "Historical Origins",
+            question: "Magna Carta (the Great Charter) was established in:",
+            options: ["1200", "1215", "1525", "1689"],
+            correct: 1
+        },
+        {
+            id: 3,
+            category: "Historical Origins",
+            question: "The end of slavery and the slave trade mainly took place in:",
+            options: ["13th century", "14th century", "18th century", "19th century"],
+            correct: 3
+        },
+        {
+            id: 4,
+            category: "International Organizations",
+            question: "The United Nations was created to restore values after:",
+            options: ["The French Revolution", "The two World Wars", "The American Civil War", "The fall of the Roman Empire"],
+            correct: 1
+        },
+        {
+            id: 5,
+            category: "Historical Origins",
+            question: "Which ancient civilizations are believed to be the oldest roots of human rights?",
+            options: ["Egyptian and Mesopotamian", "Chinese and Indian", "Greek and Roman", "Persian and Ottoman"],
+            correct: 2
+        },
+        {
+            id: 6,
+            category: "Historical Origins",
+            question: "Which of the following documented calls for human rights came first?",
+            options: ["English Bill of Rights", "Twelve Articles of the Black Forest", "Magna Carta", "US Bill of Rights"],
+            correct: 2
+        },
+        {
+            id: 7,
+            category: "Core Characteristics",
+            question: "Roman jurists spoke at that time of what was called:",
+            options: ["Civil rights", "Natural rights", "Political rights", "Social rights"],
+            correct: 1
+        },
+        {
+            id: 8,
+            category: "Historical Documents",
+            question: "The French Declaration of the Rights of Man and of the Citizen was in:",
+            options: ["1689", "1776", "1789", "1791"],
+            correct: 2
+        },
+        {
+            id: 9,
+            category: "Early History",
+            question: "Which group was often excluded from early (18th century) human rights documents?",
+            options: ["Men", "Landowners", "Women", "Political leaders"],
+            correct: 2
+        },
+        {
+            id: 10,
+            category: "Egyptian Revolutions",
+            question: "The slogan of the 2011 Egyptian Revolution was:",
+            options: ["Complete independence", "No taxation without representation", "Bread, Freedom, Social Justice", "We are born free, not by inheritance"],
+            correct: 2
+        },
+        {
+            id: 11,
+            category: "International Organizations",
+            question: "The International Labour Organization (ILO) was founded in:",
+            options: ["1918", "1919", "1945", "1948"],
+            correct: 1
+        },
+        {
+            id: 12,
+            category: "International Organizations",
+            question: "The United Nations was founded in:",
+            options: ["1939", "1941", "1945", "1948"],
+            correct: 2
+        },
+        {
+            id: 13,
+            category: "Historical Figures",
+            question: "Franklin Roosevelt highlighted the Four Freedoms in:",
+            options: ["1941", "1945", "1948", "1952"],
+            correct: 0
+        },
+        {
+            id: 14,
+            category: "Core Characteristics",
+            question: "Human rights are characterized as:",
+            options: ["Conditional", "Divisible", "Indivisible and interrelated", "Waivable"],
+            correct: 2
+        },
+        {
+            id: 15,
+            category: "UDHR",
+            question: "The Universal Declaration of Human Rights (UDHR) was adopted in:",
+            options: ["10 December 1945", "24 October 1948", "10 December 1948", "1 January 1949"],
+            correct: 2
+        },
+        {
+            id: 16,
+            category: "UDHR",
+            question: "How many articles does the UDHR contain?",
+            options: ["20 articles", "25 articles", "30 articles", "40 articles"],
+            correct: 2
+        },
+        {
+            id: 17,
+            category: "UDHR",
+            question: "The Preamble of the UDHR consists of:",
+            options: ["Six paragraphs", "Seven paragraphs", "Ten paragraphs", "Thirty paragraphs"],
+            correct: 1
+        },
+        {
+            id: 18,
+            category: "International Bill",
+            question: "The International Bill of Human Rights consists of the UDHR and two Covenants, namely:",
+            options: ["ICESCR and ICCPR", "NATO and UN Charter", "ILO and UNESCO protocols", "ICC and ICJ resolutions"],
+            correct: 0
+        },
+        {
+            id: 19,
+            category: "Preamble",
+            question: "The first paragraph of the UDHR Preamble affirms human dignity as the basis for:",
+            options: ["Economic growth", "Friendly relations", "Justice and peace", "Political sovereignty"],
+            correct: 2
+        },
+        {
+            id: 20,
+            category: "Protection",
+            question: "To avoid being compelled to rebel against tyranny, human rights should be protected by:",
+            options: ["Military force", "Rule of law", "Economic sanctions", "International agreements only"],
+            correct: 1
+        },
+        {
+            id: 21,
+            category: "UDHR Articles",
+            question: "Article 1 of the UDHR focuses on:",
+            options: ["The right to life", "Prohibition of slavery", "Equality and brotherhood", "The right to nationality"],
+            correct: 2
+        },
+        {
+            id: 22,
+            category: "UDHR Articles",
+            question: "Which article guarantees the right to life, liberty and security of person?",
+            options: ["Article 1", "Article 2", "Article 3", "Article 4"],
+            correct: 2
+        },
+        {
+            id: 23,
+            category: "UDHR Articles",
+            question: "The prohibition of slavery and servitude is set out in:",
+            options: ["Article 3", "Article 4", "Article 5", "Article 6"],
+            correct: 1
+        },
+        {
+            id: 24,
+            category: "UDHR Articles",
+            question: "Article 5 of the UDHR prohibits:",
+            options: ["Discrimination", "Arbitrary arrest", "Torture and cruel treatment", "Slavery"],
+            correct: 2
+        },
+        {
+            id: 25,
+            category: "UDHR Articles",
+            question: "The right to recognition as a person before the law everywhere is found in:",
+            options: ["Article 5", "Article 6", "Article 7", "Article 8"],
+            correct: 1
+        },
+        {
+            id: 26,
+            category: "UDHR Articles",
+            question: "According to Article 7, everyone is entitled to equal protection against:",
+            options: ["Arbitrary arrest", "Incitement to discrimination", "Economic exploitation", "Political persecution"],
+            correct: 1
+        },
+        {
+            id: 27,
+            category: "UDHR Articles",
+            question: "The right to an effective remedy by national courts is guaranteed in:",
+            options: ["Article 6", "Article 7", "Article 8", "Article 9"],
+            correct: 2
+        },
+        {
+            id: 28,
+            category: "US History",
+            question: "The secession of the Southern states and the Civil War resulted mainly from dependence on:",
+            options: ["Oil production", "Slave labor", "Industrial technology", "Agricultural machinery"],
+            correct: 1
+        },
+        {
+            id: 29,
+            category: "European History",
+            question: "The Slavery Abolition Act in Britain was passed in:",
+            options: ["1807", "1833", "1865", "1900"],
+            correct: 1
+        },
+        {
+            id: 30,
+            category: "UDHR",
+            question: "The UDHR is a landmark document in human history that was adopted in:",
+            options: ["London", "New York", "Geneva", "Paris"],
+            correct: 3
+        },
+        {
+            id: 31,
+            category: "Historical Figures",
+            question: "Who highlighted the Four Freedoms (freedom of speech, freedom of worship, freedom from want, freedom from fear) in 1941?",
+            options: ["Woodrow Wilson", "Franklin Roosevelt", "Winston Churchill", "Harry Truman"],
+            correct: 1
+        },
+        {
+            id: 32,
+            category: "Historical Origins",
+            question: "The first document mentioned as the beginning of documented calls for human rights is:",
+            options: ["Twelve Articles", "English Bill of Rights", "Magna Carta", "US Constitution"],
+            correct: 2
+        },
+        {
+            id: 33,
+            category: "World Wars",
+            question: "The two World Wars left the world deeply shocked about:",
+            options: ["Economy", "Humanity", "Technology", "Geography"],
+            correct: 1
+        },
+        {
+            id: 34,
+            category: "UDHR",
+            question: "The minimum number of languages and dialects into which the UDHR has been translated is:",
+            options: ["100", "250", "375", "500"],
+            correct: 2
+        },
+        {
+            id: 35,
+            category: "UDHR",
+            question: "The UDHR represents the first:",
+            options: ["Regional expression of rights", "National constitution", "Universal expression of rights", "Military alliance"],
+            correct: 2
+        },
+        {
+            id: 36,
+            category: "Preamble",
+            question: "The sixth paragraph of the Preamble refers to Member States pledging to achieve universal respect for human rights in cooperation with:",
+            options: ["The International Criminal Court", "The United Nations", "The World Bank", "Regional blocs"],
+            correct: 1
+        },
+        {
+            id: 37,
+            category: "UDHR Articles",
+            question: "According to Article 2, no distinction shall be made on the basis of the political, jurisdictional or international status of the country or territory, whether it is:",
+            options: ["Independent", "Under trusteeship", "Non-self-governing", "Any of the above"],
+            correct: 3
+        },
+        {
+            id: 38,
+            category: "Egyptian Revolutions",
+            question: "The uprising against Roman occupation in Egypt mainly sought:",
+            options: ["Economic reform", "Freedom of religion", "Political representation", "Abolition of slavery"],
+            correct: 1
+        },
+        {
+            id: 39,
+            category: "Historical Figures",
+            question: "Who complained around 640 AD saying: 'How do you enslave people when their mothers bore them free?'",
+            options: ["Omar Makram", "Saad Zaghloul", "The cousin of Amr ibn al-As", "Orabi"],
+            correct: 2
+        },
+        {
+            id: 40,
+            category: "Egyptian Revolutions",
+            question: "The 1919 Revolution in Egypt led by Saad Zaghloul called for:",
+            options: ["Social justice", "Freedom of religion", "Complete independence and self-determination", "No taxation without representation"],
+            correct: 2
+        },
+        {
+            id: 41,
+            category: "International Bill",
+            question: "The UDHR together with the two Covenants (ICESCR and ICCPR) constitute:",
+            options: ["The UN Charter", "The International Bill of Human Rights", "The Geneva Conventions", "Global treaties"],
+            correct: 1
+        },
+        {
+            id: 42,
+            category: "Core Characteristics",
+            question: "One key characteristic of human rights mentioned in the text is that they:",
+            options: ["Are optional", "Are granted by state decree", "Impose obligations on states", "Focus only on groups"],
+            correct: 2
+        },
+        {
+            id: 43,
+            category: "Historical Documents",
+            question: "The Twelve Articles of the Black Forest were drafted in:",
+            options: ["1215", "1525", "1689", "1789"],
+            correct: 1
+        },
+        {
+            id: 44,
+            category: "Preamble",
+            question: "The Preamble of the UDHR appears:",
+            options: ["At the end of the Declaration", "Before the thirty articles", "In the middle of the articles", "As a separate treaty"],
+            correct: 1
+        },
+        {
+            id: 45,
+            category: "Historical Figures",
+            question: "Which ancient Greek philosophers wrote extensively about people's rights (excluding slavery)?",
+            options: ["Homer, Hesiod, Virgil", "Plato, Aristotle, Socrates", "Herodotus, Thucydides, Xenophon", "Archimedes, Euclid, Pythagoras"],
+            correct: 1
+        },
+        {
+            id: 46,
+            category: "General Principles",
+            question: "The rule 'Treat others as you would like to be treated' is described as:",
+            options: ["A philosophical hypothesis", "A political ideology", "A social maxim", "A legal treaty"],
+            correct: 2
+        },
+        {
+            id: 47,
+            category: "International Organizations",
+            question: "The ILO was created mainly to protect:",
+            options: ["Human rights in war zones", "Diplomatic immunities", "Workers' rights, health and safety", "Women's right to vote"],
+            correct: 2
+        },
+        {
+            id: 48,
+            category: "UDHR Articles",
+            question: "Article 2 states that everyone is entitled to all the rights without distinction such as:",
+            options: ["Race and color", "Sex and language", "Religion and political opinion", "All of the above"],
+            correct: 3
+        },
+        {
+            id: 49,
+            category: "Historical Background",
+            question: "The historical background of the UDHR is mainly linked to suffering caused by:",
+            options: ["Colonialism", "Atrocities of World War II", "Economic inequalities", "Religious conflicts"],
+            correct: 1
+        },
+        {
+            id: 50,
+            category: "Preamble",
+            question: "The fifth paragraph of the Preamble links the UDHR to:",
+            options: ["The Covenant of the League of Nations", "The UN Charter", "The Atlantic Charter", "The Treaty of Versailles"],
+            correct: 1
+        },
+        {
+            id: 51,
+            category: "US History",
+            question: "Slavery in the United States was ultimately abolished on the basis of:",
+            options: ["Skin color or race", "Property ownership", "Nationality", "Political status"],
+            correct: 0
+        },
+        {
+            id: 52,
+            category: "Historical Documents",
+            question: "The US Declaration of Independence was adopted in:",
+            options: ["1776", "1789", "1791", "1807"],
+            correct: 0
+        },
+        {
+            id: 53,
+            category: "International Organizations",
+            question: "The League of Nations partly failed to achieve its aims because:",
+            options: ["The Soviet Union refused to join", "The United States refused to be part of it", "The United Kingdom refused to join", "It was immediately replaced by the UN"],
+            correct: 1
+        },
+        {
+            id: 54,
+            category: "Preamble",
+            question: "The fourth paragraph of the Preamble aims to promote the development of:",
+            options: ["Economic prosperity", "Friendly relations between nations", "Cultural exchange", "Scientific cooperation"],
+            correct: 1
+        },
+        {
+            id: 55,
+            category: "UDHR Articles",
+            question: "According to Article 1, all human beings are born with:",
+            options: ["Wealth and power", "Reason and conscience", "Legal status", "Political rights"],
+            correct: 1
+        },
+        {
+            id: 56,
+            category: "Egyptian Revolutions",
+            question: "Orabi led the Egyptian Revolution in:",
+            options: ["1919", "1882", "1952", "2011"],
+            correct: 1
+        },
+        {
+            id: 57,
+            category: "American Revolutions",
+            question: "The slogan 'No taxation without representation' arose during:",
+            options: ["The American Revolution", "The French Revolution", "The 1919 Egyptian Revolution", "The Roman era"],
+            correct: 0
+        },
+        {
+            id: 58,
+            category: "Core Characteristics",
+            question: "Which feature of human rights means they cannot be given up?",
+            options: ["Universality", "Interrelatedness", "Indivisibility", "Inalienability"],
+            correct: 3
+        },
+        {
+            id: 59,
+            category: "UDHR Articles",
+            question: "Article 7 states that all people are:",
+            options: ["Protected by the state", "Equal before the law", "Subject to political will", "Free from all duties"],
+            correct: 1
+        },
+        {
+            id: 60,
+            category: "Historical Background",
+            question: "The UDHR was a fundamental response to:",
+            options: ["Colonialism", "Atrocities of World War II", "Economic inequalities", "Religious conflicts"],
+            correct: 1
+        },
+        {
+            id: 61,
+            category: "Legal Impact",
+            question: "The UDHR served as a reference for detailing rights in:",
+            options: ["National constitutions", "International treaties", "Regional human rights mechanisms", "All of the above"],
+            correct: 3
+        },
+        {
+            id: 62,
+            category: "Historical Documents",
+            question: "Magna Carta was established in the year:",
+            options: ["1215", "1300", "1492", "1600"],
+            correct: 0
+        },
+        {
+            id: 63,
+            category: "Historical Documents",
+            question: "The English Bill of Rights was adopted in:",
+            options: ["1525", "1689", "1789", "1791"],
+            correct: 1
+        },
+        {
+            id: 64,
+            category: "UDHR Articles",
+            question: "Which article prohibits discrimination on grounds such as race, color, sex or language?",
+            options: ["Article 1", "Article 2", "Article 3", "Article 4"],
+            correct: 1
+        },
+        {
+            id: 65,
+            category: "General Principles",
+            question: "The essence of human rights focuses on the equal dignity and worth of:",
+            options: ["Member States", "Groups only", "All human beings", "Political parties"],
+            correct: 2
+        },
+        {
+            id: 66,
+            category: "Preamble",
+            question: "The second paragraph of the Preamble says that disregard and contempt for human rights have resulted in:",
+            options: ["Economic prosperity", "Barbarous acts", "Peaceful negotiations", "Legal reforms"],
+            correct: 1
+        },
+        {
+            id: 67,
+            category: "Preamble",
+            question: "Which paragraph of the Preamble stresses the need for a \"common understanding of these rights and freedoms\"?",
+            options: ["Fourth", "Fifth", "Sixth", "Seventh"],
+            correct: 3
+        },
+        {
+            id: 68,
+            category: "Historical Origins",
+            question: "When Roman jurists discussed natural rights, there was also:",
+            options: ["Full equality for all", "Flourishing slavery", "Universal suffrage", "Rights for Romans only"],
+            correct: 1
+        },
+        {
+            id: 69,
+            category: "International Documents",
+            question: "The US Constitution and Bill of Rights were adopted in:",
+            options: ["1776", "1789", "1791", "1807"],
+            correct: 2
+        },
+        {
+            id: 70,
+            category: "International Documents",
+            question: "The US Constitution and Bill of Rights came after:",
+            options: ["The English Bill of Rights", "Magna Carta", "Twelve Articles of the Black Forest", "The French Declaration"],
+            correct: 3
+        },
+        {
+            id: 71,
+            category: "International Covenants",
+            question: "The International Covenant on Civil and Political Rights (ICCPR) includes:",
+            options: ["Seven optional protocols", "Two optional protocols", "No optional protocols", "One optional protocol"],
+            correct: 1
+        },
+        {
+            id: 72,
+            category: "Core Characteristics",
+            question: "The principle that human rights impose duties to act and to refrain falls especially on:",
+            options: ["Individuals", "States", "Companies", "NGOs"],
+            correct: 1
+        },
+        {
+            id: 73,
+            category: "International Organizations",
+            question: "Which two main factors prevented the League of Nations from achieving its goals?",
+            options: ["Soviet and Chinese refusal", "Internal conflicts and budget problems", "US refusal and the two World Wars", "French and British veto"],
+            correct: 2
+        },
+        {
+            id: 74,
+            category: "Historical Documents",
+            question: "The US Declaration of Independence was adopted in the year:",
+            options: ["1750", "1776", "1789", "1791"],
+            correct: 1
+        },
+        {
+            id: 75,
+            category: "International Organizations",
+            question: "The primary purpose of establishing the ILO was to:",
+            options: ["End global poverty", "Protect workers' rights", "Promote freedom of religion", "Create a world government"],
+            correct: 1
+        },
+        {
+            id: 76,
+            category: "UDHR",
+            question: "The Preamble of the UDHR says that individuals and every organ of society should strive to promote respect for these rights through:",
+            options: ["Military action", "Teaching and education", "Economic coercion", "Political pressure"],
+            correct: 1
+        },
+        {
+            id: 77,
+            category: "Historical Origins",
+            question: "The term 'natural rights' in Roman law was based on:",
+            options: ["Imperial decrees", "Natural law", "Citizen voting", "Military power"],
+            correct: 1
+        },
+        {
+            id: 78,
+            category: "UDHR Articles",
+            question: "Which article prohibits torture or cruel, inhuman or degrading treatment or punishment?",
+            options: ["Article 3", "Article 4", "Article 5", "Article 6"],
+            correct: 2
+        },
+        {
+            id: 79,
+            category: "Preamble",
+            question: "The UDHR states that the dignity and equal rights of the human family are the foundation of:",
+            options: ["Economic success", "Justice and peace", "Scientific progress", "Military power"],
+            correct: 1
+        },
+        {
+            id: 80,
+            category: "Egyptian Revolutions",
+            question: "The Egyptian revolution that carried the slogan 'Raise your head, brother, the age of colonialism is over' was in:",
+            options: ["1801", "1882", "1919", "1952"],
+            correct: 3
+        },
+        {
+            id: 81,
+            category: "UDHR Articles",
+            question: "Which of the following rights is NOT explicitly mentioned in Article 3 of the UDHR?",
+            options: ["Right to life", "Liberty", "Security of person", "Right to nationality"],
+            correct: 3
+        },
+        {
+            id: 82,
+            category: "Historical Documents",
+            question: "Both the US Declaration of Independence and the French Declaration of the Rights of Man and of the Citizen were in the:",
+            options: ["16th century", "17th century", "18th century", "19th century"],
+            correct: 2
+        },
+        {
+            id: 83,
+            category: "Preamble",
+            question: "The Preamble of the UDHR links neglect of human rights to acts that have outraged:",
+            options: ["National governments", "The conscience of mankind", "International law", "Economic systems"],
+            correct: 1
+        },
+        {
+            id: 84,
+            category: "European History",
+            question: "Abolition of slavery in Britain was achieved through the 1807 Slave Trade Act and:",
+            options: ["Magna Carta", "The 1833 Slavery Abolition Act", "The English Bill of Rights", "The Reform Act"],
+            correct: 1
+        },
+        {
+            id: 85,
+            category: "General Principles",
+            question: "The saying 'People are equal like the teeth of a comb' historically refers to:",
+            options: ["Absolute monarchy", "Equality", "Social hierarchy", "Religious monopoly"],
+            correct: 1
+        },
+        {
+            id: 86,
+            category: "UDHR",
+            question: "The UDHR is the most translated document in the world into at least:",
+            options: ["30 languages", "100 languages", "375 languages", "500 languages"],
+            correct: 2
+        },
+        {
+            id: 87,
+            category: "International Covenants",
+            question: "The International Covenant on Economic, Social and Cultural Rights is one component of:",
+            options: ["The UN Charter", "The International Bill of Human Rights", "The UDHR", "The Geneva Conventions"],
+            correct: 1
+        },
+        {
+            id: 88,
+            category: "UN Charter",
+            question: "The UN Charter reaffirms faith in fundamental human rights and the dignity of all people in which paragraph of the Preamble?",
+            options: ["The first", "The third", "The fifth", "The seventh"],
+            correct: 2
+        },
+        {
+            id: 89,
+            category: "UDHR Articles",
+            question: "The right to recognition everywhere as a person before the law is an example of which type of right in the UDHR?",
+            options: ["Economic right", "Cultural right", "Civil right", "Political right"],
+            correct: 2
+        },
+        {
+            id: 90,
+            category: "Revolutions",
+            question: "The absence of basic rights for oppressed groups led to revolutions seeking:",
+            options: ["Monarchy", "Foreign occupation", "Self-rule and decision-making", "Religious persecution"],
+            correct: 2
+        },
+        {
+            id: 91,
+            category: "UDHR Articles",
+            question: "The articles of the UDHR call for freedom and equality in:",
+            options: ["Wealth and status", "Dignity and rights", "Land ownership", "Party affiliation"],
+            correct: 1
+        },
+        {
+            id: 92,
+            category: "US History",
+            question: "The American Civil War between North and South centered on the issue of:",
+            options: ["Taxes", "Slavery", "Freedom of religion", "International trade"],
+            correct: 1
+        },
+        {
+            id: 93,
+            category: "Egyptian Revolutions",
+            question: "The year 1919 witnessed a revolution led by:",
+            options: ["Orabi", "Omar Makram", "Saad Zaghloul", "Gamal Abdel Nasser"],
+            correct: 2
+        },
+        {
+            id: 94,
+            category: "International Law",
+            question: "Human rights laws aim to protect individuals and groups from:",
+            options: ["Economic competition", "Violations or interference with fundamental freedoms", "Cultural integration", "Natural disasters"],
+            correct: 1
+        },
+        {
+            id: 95,
+            category: "International Documents",
+            question: "The US Constitution and Bill of Rights came after:",
+            options: ["The English Bill of Rights", "Magna Carta", "Twelve Articles of the Black Forest", "The French Declaration"],
+            correct: 3
+        },
+        {
+            id: 96,
+            category: "UDHR Articles",
+            question: "Which article prohibits any form of slavery or servitude?",
+            options: ["Article 1", "Article 2", "Article 3", "Article 4"],
+            correct: 3
+        },
+        {
+            id: 97,
+            category: "Preamble",
+            question: "The ultimate aim of the phrase 'proclaims this Universal Declaration' at the end of the UDHR is to:",
+            options: ["Achieve economic restructuring", "Secure universal and effective recognition and observance of the rights", "Create a global military force", "Support specific political systems"],
+            correct: 1
+        },
+        {
+            id: 98,
+            category: "Historical Origins",
+            question: "Roman jurists recognized 'natural rights' for:",
+            options: ["Romans only", "Non-Romans only", "Romans and non-Romans", "Landowners only"],
+            correct: 2
+        },
+        {
+            id: 99,
+            category: "Preamble",
+            question: "According to the Preamble of the UDHR, what are the highest aspirations of the common people?",
+            options: ["Freedom of expression and belief and freedom from fear and want", "Global economic equality", "Abolition of governments", "Unlimited scientific progress"],
+            correct: 0
+        },
+        {
+            id: 100,
+            category: "Egyptian History",
+            question: "The re-establishment of justice in Egypt around 640 AD led to:",
+            options: ["War", "Instability", "Stability", "Dictatorship"],
+            correct: 2
+        }
+    ];
+
     let currentFilter = "الكل";
     let answeredQuestions = {};
+    let currentLanguage = "ar"; // "ar" or "en"
+
+    function getCurrentQuestions() {
+        return currentLanguage === "ar" ? questions : questionsEn;
+    }
 
     function initializeApp() {
         createCategoryButtons();
-        displayQuestions(questions);
+        displayQuestions(getCurrentQuestions());
     }
 
     function createCategoryButtons() {
-        const categories = ["الكل", ...new Set(questions.map(q => q.category))];
+        const base = getCurrentQuestions();
+        const categories = ["الكل", ...new Set(base.map(q => q.category))];
         const filterContainer = document.getElementById("categoryFilter");
         filterContainer.innerHTML = categories.map(cat => 
             `<button class="category-btn ${cat === 'الكل' ? 'active' : ''}" onclick="filterByCategory('${cat}')">${cat}</button>`
@@ -1071,15 +1782,17 @@
         document.querySelectorAll(".category-btn").forEach(btn => btn.classList.remove("active"));
         event.target.classList.add("active");
         
-        const filtered = category === "الكل" ? questions : questions.filter(q => q.category === category);
+        const base = getCurrentQuestions();
+        const filtered = category === "الكل" ? base : base.filter(q => q.category === category);
         displayQuestions(filtered);
     }
 
     function filterQuestions() {
         const searchTerm = document.getElementById("searchInput").value.toLowerCase();
-        const filtered = questions.filter(q => 
-            q.question.includes(searchTerm) || 
-            q.options.some(opt => opt.includes(searchTerm))
+        const base = getCurrentQuestions();
+        const filtered = base.filter(q => 
+            q.question.toLowerCase().includes(searchTerm) || 
+            q.options.some(opt => opt.toLowerCase().includes(searchTerm))
         );
         displayQuestions(filtered);
     }
@@ -1118,13 +1831,15 @@
         if (answeredQuestions[questionId] === undefined) {
             answeredQuestions[questionId] = selectedIndex;
             updateStats();
-            displayQuestions(currentFilter === "الكل" ? questions : questions.filter(q => q.category === currentFilter));
+            const base = getCurrentQuestions();
+            displayQuestions(currentFilter === "الكل" ? base : base.filter(q => q.category === currentFilter));
         }
     }
 
     function updateStats() {
         const correct = Object.values(answeredQuestions).filter((ans, idx) => {
-            const q = questions.find(q => q.id === Object.keys(answeredQuestions).map(k => parseInt(k))[idx]);
+            const base = getCurrentQuestions();
+            const q = base.find(q => q.id === Object.keys(answeredQuestions).map(k => parseInt(k))[idx]);
             return q && ans === q.correct;
         }).length;
 
@@ -1140,7 +1855,20 @@
         document.querySelectorAll(".category-btn").forEach((btn, idx) => {
             if (idx !== 0) btn.classList.remove("active");
         });
-        displayQuestions(questions);
+        displayQuestions(getCurrentQuestions());
+    }
+
+    function toggleLanguage() {
+        currentLanguage = currentLanguage === "ar" ? "en" : "ar";
+
+        const btn = document.getElementById("langToggle");
+        if (btn) {
+            btn.textContent = currentLanguage === "ar" ? "English" : "عربي";
+        }
+
+        const base = getCurrentQuestions();
+        const filtered = currentFilter === "الكل" ? base : base.filter(q => q.category === currentFilter);
+        displayQuestions(filtered);
     }
 
     function resetAll() {
